@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UpForScale — Strategic Consulting & Advisory</title>
+  <meta name="description" content="UpForScale helps founders, investors, and executives close the gap between ambition and execution — with senior-led strategy and hands-on delivery.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fiery: '#FF3702',
+            'fiery-dark': '#E03000',
+            night: '#353637',
+            'night-light': '#4A4B4D',
+            polar: '#EBE7E1',
+            'polar-light': '#F5F3EF',
+            'polar-dark': '#DDD8D0',
+          },
+          fontFamily: {
+            heading: ['Sora', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+    body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Inter', sans-serif; color: #353637; }
+    h1, h2, h3, h4, h5 { font-family: 'Sora', sans-serif; letter-spacing: -0.03em; }
+    p, li { line-height: 1.7; }
+
+    .noise-bg { position: relative; }
+    .noise-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .noise-bg > * { position: relative; z-index: 1; }
+
+    .accent-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #353637;
+      color: rgba(255,255,255,0.85);
+      padding: 6px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 100px;
+    }
+    .accent-tag .dot { width: 6px; height: 6px; background: #FF3702; border-radius: 50%; }
+
+    .accent-tag-subtle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(53, 54, 55, 0.05);
+      border: none;
+      color: #4A4B4D;
+      padding: 6px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 100px;
+    }
+    .accent-tag-subtle .dot { width: 5px; height: 5px; background: #FF3702; border-radius: 50%; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .service-card {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(255, 55, 2, 0.08), 0 2px 8px rgba(53, 54, 55, 0.06);
+    }
+
+    .nav-link { position: relative; transition: color 0.2s ease; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FF3702;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link:hover::after, .nav-link:focus-visible::after { width: 100%; }
+
+    .btn-primary {
+      background: #FF3702;
+      color: white;
+      padding: 14px 32px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 100px;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #E03000; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255, 55, 2, 0.25); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid #FF3702; outline-offset: 3px; }
+
+    .btn-outline {
+      border: 2px solid #FF3702;
+      color: #FF3702;
+      padding: 12px 30px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 100px;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-outline:hover { background: #FF3702; color: white; transform: translateY(-1px); }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 2px solid #FF3702; outline-offset: 3px; }
+
+    .icon-circle {
+      width: 56px; height: 56px;
+      background: rgba(255, 55, 2, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .icon-circle svg { width: 24px; height: 24px; stroke: #FF3702; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .lang-toggle button {
+      padding: 3px 7px;
+      min-height: 24px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      color: #9A9899;
+      transition: color 0.2s;
+      border-radius: 3px;
+    }
+    .lang-toggle button.active { color: #353637; font-weight: 600; }
+    .lang-toggle button:hover:not(.active) { color: #4A4B4D; }
+    .lang-toggle .lang-sep { color: #DDD8D0; font-weight: 300; user-select: none; }
+
+    .img-overlay { position: relative; overflow: hidden; }
+    .img-overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 55, 2, 0.05), transparent 60%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    [data-lang="nl"] { display: none; }
+    html[lang="nl"] [data-lang="nl"] { display: block; }
+    html[lang="nl"] [data-lang="en"] { display: none; }
+    span[data-lang="nl"], a[data-lang="nl"] { display: none; }
+    html[lang="nl"] span[data-lang="nl"], html[lang="nl"] a[data-lang="nl"] { display: inline; }
+    html[lang="nl"] span[data-lang="en"], html[lang="nl"] a[data-lang="en"] { display: none; }
+  </style>
+</head>
+<body class="bg-polar-light">
+
+  <!-- NAVIGATION -->
+  <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300" style="background: rgba(235,231,225,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16 lg:h-20">
+      <a href="#hero" aria-label="UpForScale home">
+        <img src="assets/logo-regular.svg" alt="UpForScale" class="h-8 lg:h-10">
+      </a>
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="#services" class="nav-link text-sm font-medium text-night-light hover:text-night"><span data-lang="en">Services</span><span data-lang="nl">Diensten</span></a>
+        <a href="#for-who" class="nav-link text-sm font-medium text-night-light hover:text-night"><span data-lang="en">For Who</span><span data-lang="nl">Voor Wie</span></a>
+        <a href="#why" class="nav-link text-sm font-medium text-night-light hover:text-night"><span data-lang="en">Why UpForScale</span><span data-lang="nl">Waarom UpForScale</span></a>
+        <a href="#about" class="nav-link text-sm font-medium text-night-light hover:text-night"><span data-lang="en">About</span><span data-lang="nl">Over</span></a>
+        <a href="#resources" class="nav-link text-sm font-medium text-night-light hover:text-night"><span data-lang="en">Insights</span><span data-lang="nl">Inzichten</span></a>
+        <a href="#contact" class="btn-primary text-sm"><span data-lang="en">Get in touch</span><span data-lang="nl">Neem contact op</span></a>
+        <div class="lang-toggle">
+          <button id="lang-en" class="active" onclick="setLang('en')">EN</button>
+          <span class="lang-sep">|</span>
+          <button id="lang-nl" onclick="setLang('nl')">NL</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 lg:hidden">
+        <div class="lang-toggle">
+          <button class="active lang-en-mob" onclick="setLang('en')">EN</button>
+          <span class="lang-sep">|</span>
+          <button class="lang-nl-mob" onclick="setLang('nl')">NL</button>
+        </div>
+        <button id="mobile-toggle" aria-label="Open menu" class="p-2 -mr-2" onclick="toggleMobile()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#353637" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-polar-dark" style="background: rgba(235,231,225,0.95);">
+      <div class="px-6 py-5 flex flex-col gap-1">
+        <a href="#services" class="text-sm font-medium py-3 px-3 rounded-lg hover:bg-polar-dark/50 transition-colors" onclick="closeMobile()"><span data-lang="en">Services</span><span data-lang="nl">Diensten</span></a>
+        <a href="#for-who" class="text-sm font-medium py-3 px-3 rounded-lg hover:bg-polar-dark/50 transition-colors" onclick="closeMobile()"><span data-lang="en">For Who</span><span data-lang="nl">Voor Wie</span></a>
+        <a href="#why" class="text-sm font-medium py-3 px-3 rounded-lg hover:bg-polar-dark/50 transition-colors" onclick="closeMobile()"><span data-lang="en">Why UpForScale</span><span data-lang="nl">Waarom UpForScale</span></a>
+        <a href="#about" class="text-sm font-medium py-3 px-3 rounded-lg hover:bg-polar-dark/50 transition-colors" onclick="closeMobile()"><span data-lang="en">About</span><span data-lang="nl">Over</span></a>
+        <a href="#resources" class="text-sm font-medium py-3 px-3 rounded-lg hover:bg-polar-dark/50 transition-colors" onclick="closeMobile()"><span data-lang="en">Insights</span><span data-lang="nl">Inzichten</span></a>
+        <a href="#contact" class="btn-primary text-sm text-center mt-3" onclick="closeMobile()"><span data-lang="en">Get in touch</span><span data-lang="nl">Neem contact op</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" class="pt-32 lg:pt-40 pb-20 lg:pb-28 noise-bg bg-polar-light overflow-visible">
+    <div class="max-w-7xl mx-auto px-8 lg:px-16">
+      <div class="lg:flex lg:items-center lg:gap-20">
+        <div class="lg:w-[55%]">
+          <div class="accent-tag-subtle mb-6"><span class="dot"></span><span data-lang="en">Strategic Consulting & Advisory</span><span data-lang="nl">Strategisch Advies & Begeleiding</span></div>
+          <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold text-night leading-tight mb-8">
+            <span data-lang="en">Helping leaders<br>turn <span class="text-fiery">strategy</span> into <span class="text-fiery">momentum</span></span>
+            <span data-lang="nl">Wij helpen leiders<br><span class="text-fiery">strategie</span> om te zetten in <span class="text-fiery">momentum</span></span>
+          </h1>
+          <p class="text-lg lg:text-xl text-night-light max-w-lg mb-10 leading-relaxed">
+            <span data-lang="en">UpForScale helps founders, investors, and executives close the gap between ambition and execution — with senior-led strategy and hands-on delivery.</span>
+            <span data-lang="nl">UpForScale helpt oprichters, investeerders en bestuurders om de kloof te dichten tussen ambitie en uitvoering — met senioriteit in strategie en hands-on begeleiding.</span>
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#contact" class="btn-primary"><span data-lang="en">Get in touch</span><span data-lang="nl">Neem contact op</span></a>
+            <a href="#services" class="btn-outline"><span data-lang="en">See our services</span><span data-lang="nl">Bekijk onze diensten</span></a>
+          </div>
+        </div>
+        <div class="hidden lg:block lg:w-[45%]">
+          <div class="relative">
+            <div class="absolute -top-6 -right-6 w-[70%] h-[70%] rounded-3xl" style="background: rgba(255,55,2,0.06);"></div>
+            <div class="relative img-overlay rounded-3xl overflow-hidden" style="box-shadow: 0 20px 50px rgba(53,54,55,0.12), 0 4px 12px rgba(53,54,55,0.04);">
+              <img src="assets/in-conversation.png" alt="Egbert Voerman in conversation with a client" class="w-full h-auto object-cover" style="aspect-ratio: 5/6;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE DO -->
+  <section class="py-20 lg:py-28 bg-white noise-bg">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div class="reveal">
+          <div class="accent-tag mb-6"><span class="dot"></span><span data-lang="en">What We Do</span><span data-lang="nl">Wat We Doen</span></div>
+          <h2 class="text-3xl lg:text-4xl font-bold text-night mb-6">
+            <span data-lang="en">Your best ideas shouldn't stay stuck in your head</span>
+            <span data-lang="nl">Uw beste ideeën horen niet in uw hoofd te blijven zitten</span>
+          </h2>
+          <div data-lang="en">
+            <p class="text-night-light mb-4">Most leaders we work with aren't short on ideas or direction. They know their business, their market, and where the opportunities are. But an idea in your head remains just that — an idea. There's always another meeting, another fire to put out, another priority competing for attention. The time to properly develop, test, and sharpen those ideas simply isn't there.</p>
+            <p class="text-night-light mb-4">That's where UpForScale comes in. We work alongside leaders to pressure-test ideas, sharpen them through structured dialogue, and translate them into clear priorities and actionable plans.</p>
+            <p class="text-night-light font-medium">Because the hardest part of strategy isn't having ideas. It's choosing between them — and committing to the ones that matter.</p>
+          </div>
+          <div data-lang="nl">
+            <p class="text-night-light mb-4">De meeste leiders met wie we werken hebben geen gebrek aan ideeën of richting. Maar een idee in uw hoofd blijft precies dat — een idee. Er is altijd weer een vergadering, weer een brand om te blussen, weer een prioriteit die om aandacht vraagt.</p>
+            <p class="text-night-light mb-4">Daar komt UpForScale in beeld. We werken zij aan zij met leiders om ideeën te toetsen, aan te scherpen door gestructureerde dialoog, en te vertalen naar heldere prioriteiten en uitvoerbare plannen.</p>
+            <p class="text-night-light font-medium">Want het moeilijkste aan strategie is niet het hebben van ideeën. Het is kiezen tússen die ideeën — en je committeren aan degene die ertoe doen.</p>
+          </div>
+        </div>
+        <div class="reveal img-overlay rounded-2xl overflow-hidden" style="box-shadow: 0 8px 30px rgba(53,54,55,0.10), 0 2px 8px rgba(53,54,55,0.04);">
+          <img src="assets/behind-laptop.jpeg" alt="Egbert Voerman working hands-on with a client" class="w-full h-auto object-cover aspect-[4/3]" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW WE WORK -->
+  <section class="py-20 lg:py-28 bg-night noise-bg text-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-3xl reveal">
+        <div class="accent-tag mb-6" style="background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.7);"><span class="dot"></span><span data-lang="en">How We Work</span><span data-lang="nl">Hoe We Werken</span></div>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-6">
+          <span data-lang="en">Structured thinking. Iterative process. Lasting results.</span>
+          <span data-lang="nl">Gestructureerd denken. Iteratief proces. Blijvend resultaat.</span>
+        </h2>
+        <div data-lang="en">
+          <p class="text-white/80 mb-4">Every engagement starts with conversation — not a presentation. We use structured dialogue to bring out what the leader already knows, challenge what hasn't been tested, and surface the priorities that actually move the needle.</p>
+          <p class="text-white/80 mb-4">From there, it's iterative: ideas become plans, plans become decisions, decisions become action. The domain expertise comes from you. The structure, the rigour, and the execution capacity come from us.</p>
+          <p class="text-white/90 font-medium">The result: leaders who don't just have a strategy, but one they've stress-tested, committed to, and can communicate clearly to their teams.</p>
+        </div>
+        <div data-lang="nl">
+          <p class="text-white/80 mb-4">Elk traject begint met een gesprek — niet met een presentatie. We gebruiken gestructureerde dialoog om naar boven te halen wat de leider al weet, te challengen wat nog niet getoetst is, en de prioriteiten bloot te leggen die écht het verschil maken.</p>
+          <p class="text-white/80 mb-4">Vanaf daar is het iteratief: ideeën worden plannen, plannen worden besluiten, besluiten worden actie. De domeinexpertise komt van u. De structuur, de discipline en de uitvoeringskracht komen van ons.</p>
+          <p class="text-white/90 font-medium">Het resultaat: leiders die niet alleen een strategie hébben, maar er een die ze hebben doorgetoetst, waar ze achter staan, en die ze helder kunnen overbrengen aan hun team.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-20 lg:py-28 bg-polar noise-bg">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <div class="accent-tag mx-auto mb-6"><span class="dot"></span><span data-lang="en">Services</span><span data-lang="nl">Diensten</span></div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-night mb-4"><span data-lang="en">From strategy to traction</span><span data-lang="nl">Van strategie naar tractie</span></h2>
+        <p class="text-night-light max-w-2xl mx-auto"><span data-lang="en">Every engagement is led at a senior level. When the scope demands it, we bring in trusted specialists — but your strategic lead stays the same throughout.</span><span data-lang="nl">Elk traject wordt op seniorniveau geleid. Wanneer de scope het vereist, schakelen we vertrouwde specialisten in — maar uw strategische leiding blijft dezelfde.</span></p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+        <div class="service-card bg-white rounded-2xl p-8 lg:p-10 reveal" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-night mb-1">The Review</h3>
+              <p class="text-fiery text-sm font-medium"><span data-lang="en">Clarity before action</span><span data-lang="nl">Helderheid vóór actie</span></p>
+            </div>
+            <div class="icon-circle ml-4 flex-shrink-0"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          </div>
+          <div data-lang="en"><p class="text-night-light text-sm mb-4">A focused strategic diagnostic that cuts through the noise. Within 2–4 weeks, you get a clear-eyed assessment of what's working, what's not, and what to do about it — in priority order.</p><p class="text-night-light text-sm">Often the starting point for a broader engagement — but just as valuable as a standalone.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm mb-4">Een gerichte strategische diagnose die door de ruis heen snijdt. Binnen 2–4 weken krijgt u een nuchter beeld van wat werkt, wat niet, en wat eraan gedaan moet worden.</p><p class="text-night-light text-sm">Vaak het startpunt voor een breder traject — maar net zo waardevol als op zichzelf staand.</p></div>
+        </div>
+        <div class="service-card bg-white rounded-2xl p-8 lg:p-10 reveal" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-night mb-1">The Drive</h3>
+              <p class="text-fiery text-sm font-medium"><span data-lang="en">From plans to measurable progress</span><span data-lang="nl">Van plannen naar meetbare voortgang</span></p>
+            </div>
+            <div class="icon-circle ml-4 flex-shrink-0"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          </div>
+          <div data-lang="en"><p class="text-night-light text-sm mb-4">Hands-on execution leadership for when strategy needs to become reality. UpForScale acts as your senior execution partner — aligning teams, driving key initiatives, and embedding a delivery rhythm that lasts.</p><p class="text-night-light text-sm">Whether as an external lead or embedded within your organisation.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm mb-4">Hands-on uitvoeringsleiderschap voor wanneer strategie werkelijkheid moet worden. UpForScale fungeert als uw senior uitvoeringspartner — teams alignen, key-initiatieven aanjagen en een leveringsritme inbedden dat beklijft.</p><p class="text-night-light text-sm">Als externe leider of ingebed binnen uw organisatie.</p></div>
+        </div>
+        <div class="service-card bg-white rounded-2xl p-8 lg:p-10 reveal" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-night mb-1">The Deal</h3>
+              <p class="text-fiery text-sm font-medium"><span data-lang="en">Complex transactions, handled</span><span data-lang="nl">Complexe transacties, vakkundig begeleid</span></p>
+            </div>
+            <div class="icon-circle ml-4 flex-shrink-0"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          </div>
+          <div data-lang="en"><p class="text-night-light text-sm mb-4">High-stakes transactions require someone who understands the mechanics — financial structuring, debt, valuation, investor dynamics — and can keep the strategic picture clear while the details multiply.</p><p class="text-night-light text-sm">Two decades on the financing side. A hands-on approach from structuring to close.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm mb-4">High-stakes transacties vereisen iemand die de mechaniek begrijpt — financiële structurering, schuld, waardering, investeerdersdynamiek — en die het strategische overzicht bewaakt.</p><p class="text-night-light text-sm">Twee decennia aan de financieringskant. Een hands-on aanpak van structurering tot closing.</p></div>
+        </div>
+        <div class="service-card bg-white rounded-2xl p-8 lg:p-10 reveal" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-night mb-1">The Shift</h3>
+              <p class="text-fiery text-sm font-medium"><span data-lang="en">Leadership that grows with the business</span><span data-lang="nl">Leiderschap dat meegroeit met het bedrijf</span></p>
+            </div>
+            <div class="icon-circle ml-4 flex-shrink-0"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          </div>
+          <div data-lang="en"><p class="text-night-light text-sm mb-4">As companies scale, the leadership model that got them here won't get them there. The Shift helps founders and executives evolve their role, their team, and their governance to match the next stage of growth.</p><p class="text-night-light text-sm">A leadership model that's built to scale — not just to cope.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm mb-4">Naarmate bedrijven groeien, is het leiderschapsmodel dat ze hier heeft gebracht niet het model dat ze verder brengt. The Shift helpt oprichters en bestuurders hun rol, team en governance te laten evolueren.</p><p class="text-night-light text-sm">Een leiderschapsmodel dat gebouwd is om te schalen — niet alleen om te overleven.</p></div>
+        </div>
+      </div>
+      <div class="text-center mt-12 reveal">
+        <a href="#contact" class="btn-outline"><span data-lang="en">Discuss your challenge</span><span data-lang="nl">Bespreek uw uitdaging</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR WHO -->
+  <section id="for-who" class="py-20 lg:py-28 bg-white noise-bg">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <div class="accent-tag mx-auto mb-6"><span class="dot"></span><span data-lang="en">For Who</span><span data-lang="nl">Voor Wie</span></div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-night mb-4"><span data-lang="en">For leaders who've outgrown the current playbook</span><span data-lang="nl">Voor leiders die het huidige speelveld zijn ontgroeid</span></h2>
+        <p class="text-night-light max-w-2xl mx-auto"><span data-lang="en">You have the ambition and the vision. What's missing is the bandwidth, the sounding board, or the execution muscle to make it real.</span><span data-lang="nl">U heeft de ambitie en de visie. Wat ontbreekt is de bandbreedte, het klankbord of de uitvoeringskracht om het waar te maken.</span></p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+        <div class="service-card bg-polar-light rounded-2xl p-8 lg:p-10 reveal cursor-pointer" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <svg class="w-5 h-5 text-night-light opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-night mb-2"><span data-lang="en">Founders & Entrepreneurs</span><span data-lang="nl">Oprichters & Ondernemers</span></h3>
+          <div data-lang="en"><p class="text-night-light text-sm">You're not short on ideas. But in the daily reality of running a growing company, there's no time to develop those ideas properly. UpForScale works alongside founders as a senior thinking partner and execution catalyst.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm">U heeft geen gebrek aan ideeën. Maar in de dagelijkse realiteit van een groeiend bedrijf is er geen tijd om die ideeën goed uit te werken. UpForScale werkt zij aan zij met oprichters als senior denkpartner en uitvoeringskatalysator.</p></div>
+        </div>
+        <div class="service-card bg-polar-light rounded-2xl p-8 lg:p-10 reveal cursor-pointer" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div class="icon-circle"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <svg class="w-5 h-5 text-night-light opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-night mb-2"><span data-lang="en">Private Equity Investors</span><span data-lang="nl">Private Equity-investeerders</span></h3>
+          <div data-lang="en"><p class="text-night-light text-sm">The deal is done. The thesis is clear. But turning that thesis into value creation requires hands-on operational support. UpForScale drives the initiatives that matter, keeping leadership aligned and ensuring the first 100 days deliver real traction.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm">De deal is gedaan. De investeringsthese is helder. Maar die these vertalen naar waardecreatie vereist hands-on operationele ondersteuning. UpForScale leidt de initiatieven die ertoe doen en zorgt dat de eerste 100 dagen echte tractie opleveren.</p></div>
+        </div>
+        <div class="service-card bg-polar-light rounded-2xl p-8 lg:p-10 reveal cursor-pointer" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+            <svg class="w-5 h-5 text-night-light opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-night mb-2"><span data-lang="en">Corporates</span><span data-lang="nl">Corporates</span></h3>
+          <div data-lang="en"><p class="text-night-light text-sm">Some challenges inside large organisations don't fit the existing structure. UpForScale embeds within corporate teams to lead specific initiatives from the inside — combining governance fluency with the pace and pragmatism of a scale-up operator.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm">Sommige uitdagingen binnen grote organisaties passen niet in de bestaande structuur. UpForScale nestelt zich binnen corporate teams om specifieke initiatieven van binnenuit te leiden — met governance-kennis gecombineerd met het tempo en pragmatisme van een scale-up operator.</p></div>
+        </div>
+        <div class="service-card bg-polar-light rounded-2xl p-8 lg:p-10 reveal cursor-pointer" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="flex items-start justify-between mb-4">
+            <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+            <svg class="w-5 h-5 text-night-light opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-night mb-2"><span data-lang="en">MBI Candidates</span><span data-lang="nl">MBI-kandidaten</span></h3>
+          <div data-lang="en"><p class="text-night-light text-sm">A management buy-in is a once-in-a-career move. UpForScale guides MBI candidates through the full cycle — valuation, due diligence, financing, negotiation — while keeping them commercially sharp and credible with lenders and investors.</p></div>
+          <div data-lang="nl"><p class="text-night-light text-sm">Een management buy-in is een eens-in-een-carrière stap. UpForScale begeleidt MBI-kandidaten door de volledige cyclus — waardering, due diligence, financiering, onderhandeling — terwijl ze commercieel scherp en geloofwaardig blijven.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY UPFORSCALE -->
+  <section id="why" class="py-20 lg:py-28 bg-night noise-bg text-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <div class="accent-tag mx-auto mb-6" style="background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.7);"><span class="dot"></span><span data-lang="en">Why UpForScale</span><span data-lang="nl">Waarom UpForScale</span></div>
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4"><span data-lang="en">Senior-led. Lean. Built for outcomes.</span><span data-lang="nl">Senior-geleid. Lean. Gebouwd voor resultaat.</span></h2>
+        <p class="text-white/70 max-w-2xl mx-auto"><span data-lang="en">Because you don't need another consultancy that sends a team of juniors after a senior partner wins the pitch.</span><span data-lang="nl">Omdat u geen consultancybureau nodig heeft dat een team van junioren stuurt nadat een senior partner de pitch heeft gewonnen.</span></p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8 lg:gap-10">
+        <div class="flex gap-5 reveal">
+          <div class="icon-circle flex-shrink-0" style="background: rgba(255,55,2,0.15);"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div><h3 class="text-lg font-bold mb-2"><span data-lang="en">Senior attention, always</span><span data-lang="nl">Altijd senior aandacht</span></h3><p class="text-white/70 text-sm"><span data-lang="en">Your strategic lead is involved from the first conversation to the final deliverable. Not just at the kick-off. Throughout.</span><span data-lang="nl">Uw strategische leiding is betrokken vanaf het eerste gesprek tot het laatste resultaat. Gedurende het hele traject.</span></p></div>
+        </div>
+        <div class="flex gap-5 reveal">
+          <div class="icon-circle flex-shrink-0" style="background: rgba(255,55,2,0.15);"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div><h3 class="text-lg font-bold mb-2"><span data-lang="en">Strategy built for the real world</span><span data-lang="nl">Strategie gebouwd voor de echte wereld</span></h3><p class="text-white/70 text-sm"><span data-lang="en">No theoretical frameworks. No death-by-PowerPoint. Everything UpForScale produces is designed to survive contact with reality.</span><span data-lang="nl">Geen theoretische raamwerken. Geen death-by-PowerPoint. Alles wat UpForScale oplevert is ontworpen om de confrontatie met de realiteit te overleven.</span></p></div>
+        </div>
+        <div class="flex gap-5 reveal">
+          <div class="icon-circle flex-shrink-0" style="background: rgba(255,55,2,0.15);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><h3 class="text-lg font-bold mb-2"><span data-lang="en">Lean, fast, and accountable</span><span data-lang="nl">Lean, snel en aanspreekbaar</span></h3><p class="text-white/70 text-sm"><span data-lang="en">A focused team with low overhead means faster decisions, shorter timelines, and direct accountability.</span><span data-lang="nl">Een gefocust team met lage overhead betekent snellere besluiten, kortere doorlooptijden en directe verantwoordelijkheid.</span></p></div>
+        </div>
+        <div class="flex gap-5 reveal">
+          <div class="icon-circle flex-shrink-0" style="background: rgba(255,55,2,0.15);"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><h3 class="text-lg font-bold mb-2"><span data-lang="en">A challenger, not a yes-man</span><span data-lang="nl">Een uitdager, geen ja-knikker</span></h3><p class="text-white/70 text-sm"><span data-lang="en">The best outcomes come from honest conversations. UpForScale acts as a strategic co-pilot: challenging assumptions and stress-testing plans.</span><span data-lang="nl">De beste resultaten komen voort uit eerlijke gesprekken. UpForScale fungeert als strategische co-piloot: aannames challengen en plannen stresstesten.</span></p></div>
+        </div>
+      </div>
+      <div class="text-center mt-14 reveal"><a href="#contact" class="btn-outline"><span data-lang="en">Talk to Egbert</span><span data-lang="nl">Praat met Egbert</span></a></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-20 lg:py-28 bg-polar noise-bg">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+        <div class="lg:col-span-2 reveal">
+          <div class="img-overlay rounded-2xl overflow-hidden mb-6" style="box-shadow: 0 8px 30px rgba(53,54,55,0.10), 0 2px 8px rgba(53,54,55,0.04);">
+            <img src="assets/headshot-jacket.jpeg" alt="Egbert Voerman" class="w-full h-auto object-cover">
+          </div>
+          <div class="space-y-4">
+            <div class="flex gap-3"><div class="w-1 bg-fiery rounded-full flex-shrink-0"></div><div><p class="text-sm font-semibold text-night">UpForScale Consultancy</p><p class="text-xs text-night-light">2023 – present</p></div></div>
+            <div class="flex gap-3"><div class="w-1 bg-polar-dark rounded-full flex-shrink-0"></div><div><p class="text-sm font-semibold text-night">MC Holding BV</p><p class="text-xs text-night-light">2020 – 2023</p></div></div>
+            <div class="flex gap-3"><div class="w-1 bg-polar-dark rounded-full flex-shrink-0"></div><div><p class="text-sm font-semibold text-night">ING Bank</p><p class="text-xs text-night-light">2000 – 2020</p></div></div>
+          </div>
+        </div>
+        <div class="lg:col-span-3 reveal">
+          <div class="accent-tag mb-6"><span class="dot"></span><span data-lang="en">About</span><span data-lang="nl">Over</span></div>
+          <h2 class="text-3xl lg:text-4xl font-bold text-night mb-6"><span data-lang="en">Advice from both sides of the table</span><span data-lang="nl">Advies vanuit beide kanten van de tafel</span></h2>
+          <div data-lang="en">
+            <p class="text-night-light mb-4">Egbert spent two decades at ING Bank in senior roles across leveraged finance, debt restructuring, and wholesale banking — including as Country Head and structuring mandates of over €1 billion. That's where the financial rigour comes from.</p>
+            <p class="text-night-light mb-4">But unlike most bankers, he didn't stop there.</p>
+            <p class="text-night-light mb-4">A deliberate move into innovation and venture building — first as Venture Lead inside ING, then as part of the leadership team at MC Holding, a scale-up developing digital identity services — gave him what few advisors have: first-hand experience of what it takes to build and grow a business from the inside.</p>
+            <p class="text-night-light mb-6">That combination is what makes UpForScale different. Financial depth from twenty years in banking. Operational reality from building ventures and working inside a scale-up. And the judgement that comes from having sat on both sides of the table.</p>
+          </div>
+          <div data-lang="nl">
+            <p class="text-night-light mb-4">Egbert bracht twee decennia door bij ING Bank in senior functies in leveraged finance, schuldherstructurering en wholesale banking — waaronder als Country Head en met structureringsmandaten van meer dan €1 miljard.</p>
+            <p class="text-night-light mb-4">Maar anders dan de meeste bankiers stopte hij daar niet.</p>
+            <p class="text-night-light mb-4">Een bewuste overstap naar innovatie en venture building — eerst als Venture Lead binnen ING, daarna als onderdeel van het leiderschapsteam bij MC Holding — gaf hem wat weinig adviseurs hebben: eerstehands ervaring met wat het kost om een bedrijf van binnenuit op te bouwen en te laten groeien.</p>
+            <p class="text-night-light mb-6">Die combinatie maakt UpForScale anders. Financiële diepgang uit twintig jaar bankieren. Operationele realiteitszin. En het oordeelsvermogen dat voortkomt uit het zitten aan beide kanten van de tafel.</p>
+          </div>
+          <blockquote class="border-l-4 border-fiery pl-6 py-2">
+            <p class="text-night italic text-lg font-medium mb-2">"The essence of strategy is choosing what not to do."</p>
+            <cite class="text-night-light text-sm not-italic">— Michael Porter</cite>
+          </blockquote>
+          <div class="mt-10 pt-10 border-t border-polar-dark">
+            <h3 class="text-xl font-bold text-night mb-3"><span data-lang="en">Direct. Rigorous. In the room with you.</span><span data-lang="nl">Direct. Gedegen. Naast u in de kamer.</span></h3>
+            <div data-lang="en"><p class="text-night-light">Egbert is known for constructive directness — he'll challenge assumptions, pressure-test decisions, and push for action. Not because it's comfortable, but because it works.</p></div>
+            <div data-lang="nl"><p class="text-night-light">Egbert staat bekend om constructieve directheid — hij challenged aannames, toetst besluiten en drijft aan tot actie. Niet omdat het comfortabel is, maar omdat het werkt.</p></div>
+          </div>
+          <div class="mt-8 pt-8 border-t border-polar-dark">
+            <h3 class="text-xl font-bold text-night mb-3"><span data-lang="en">Beyond work</span><span data-lang="nl">Buiten het werk</span></h3>
+            <div data-lang="en"><p class="text-night-light">Based in Amsterdam, having lived and worked in London, New York, and Sofia. Passionate about squash, padel, and fitness — and once ran the New York Marathon in just over three hours.</p></div>
+            <div data-lang="nl"><p class="text-night-light">Gevestigd in Amsterdam, met woon- en werkervaring in Londen, New York en Sofia. Gepassioneerd over squash, padel en fitness — en ooit de New York Marathon gelopen in iets meer dan drie uur.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources" class="py-20 lg:py-28 bg-polar-light noise-bg">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <div class="accent-tag mx-auto mb-6"><span class="dot"></span><span data-lang="en">Insights</span><span data-lang="nl">Inzichten</span></div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-night mb-4"><span data-lang="en">Insights for leaders navigating growth</span><span data-lang="nl">Inzichten voor leiders in groeifase</span></h2>
+        <p class="text-night-light max-w-2xl mx-auto"><span data-lang="en">Perspectives on strategy, execution, and leadership — from the work we do every day.</span><span data-lang="nl">Perspectieven op strategie, uitvoering en leiderschap — vanuit het werk dat we dagelijks doen.</span></p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl p-8 reveal" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="icon-circle mb-5"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <h3 class="text-lg font-bold text-night mb-2"><span data-lang="en">Blog & Articles</span><span data-lang="nl">Blog & Artikelen</span></h3>
+          <p class="text-night-light text-sm"><span data-lang="en">Perspectives on strategy, growth, M&A, and leadership.</span><span data-lang="nl">Perspectieven op strategie, groei, M&A en leiderschap.</span></p>
+          <p class="text-night-light text-xs mt-4 italic"><span data-lang="en">Coming soon</span><span data-lang="nl">Binnenkort beschikbaar</span></p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 reveal" style="box-shadow: 0 2px 12px rgba(53,54,55,0.04);">
+          <div class="icon-circle mb-5"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <h3 class="text-lg font-bold text-night mb-2"><span data-lang="en">Curated Reading</span><span data-lang="nl">Geselecteerde Bronnen</span></h3>
+          <p class="text-night-light text-sm"><span data-lang="en">Tools, references, and external content worth your time.</span><span data-lang="nl">Tools, referenties en externe content die uw tijd waard zijn.</span></p>
+          <p class="text-night-light text-xs mt-4 italic"><span data-lang="en">Coming soon</span><span data-lang="nl">Binnenkort beschikbaar</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-20 lg:py-28 bg-white noise-bg">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <div class="accent-tag mx-auto mb-6"><span class="dot"></span>Contact</div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-night mb-4"><span data-lang="en">Let's talk about what's next</span><span data-lang="nl">Laten we het hebben over wat er komen gaat</span></h2>
+        <p class="text-night-light"><span data-lang="en">Every engagement starts with a conversation. No slides. No sales pitch. Just an honest discussion about where you are and what's in the way.</span><span data-lang="nl">Elk traject begint met een gesprek. Geen slides. Geen verkooppraatje. Gewoon een eerlijk gesprek over waar u staat en wat in de weg zit.</span></p>
+      </div>
+      <form class="space-y-5 reveal" onsubmit="return false;">
+        <div class="grid md:grid-cols-2 gap-5">
+          <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Name</span><span data-lang="nl">Naam</span></label><input type="text" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
+          <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Company</span><span data-lang="nl">Bedrijf</span></label><input type="text" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
+        </div>
+        <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Email</span><span data-lang="nl">E-mail</span></label><input type="email" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
+        <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">What's on your mind?</span><span data-lang="nl">Waar kunnen we bij helpen?</span></label><textarea rows="5" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors resize-none"></textarea></div>
+        <button type="submit" class="btn-primary w-full text-center"><span data-lang="en">Send message</span><span data-lang="nl">Verstuur bericht</span></button>
+      </form>
+      <div class="text-center mt-8 reveal">
+        <p class="text-night-light text-sm mb-2"><span data-lang="en">Prefer email? </span><span data-lang="nl">Liever direct mailen? </span><a href="mailto:egbert.voerman@upforscale.com" class="text-fiery font-medium hover:underline">egbert.voerman@upforscale.com</a></p>
+        <p class="text-night-light text-sm italic mt-4"><span data-lang="en">If we're not the right fit, we'll tell you — and point you to someone who is.</span><span data-lang="nl">Als we niet de juiste match zijn, zeggen we dat — en wijzen we u naar iemand die dat wel is.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-night py-10">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <img src="assets/logo-light.svg" alt="UpForScale" class="h-7">
+        <div class="flex items-center gap-5">
+          <a href="https://www.linkedin.com/in/egbertvoerman/" target="_blank" rel="noopener" aria-label="LinkedIn" class="text-white/50 hover:text-white transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="mailto:egbert.voerman@upforscale.com" aria-label="Email" class="text-white/50 hover:text-white transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </a>
+        </div>
+        <p class="text-white/30 text-xs">&copy; 2026 UpForScale Consultancy. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-nl').classList.toggle('active', lang === 'nl');
+      document.querySelectorAll('.lang-en-mob').forEach(el => el.classList.toggle('active', lang === 'en'));
+      document.querySelectorAll('.lang-nl-mob').forEach(el => el.classList.toggle('active', lang === 'nl'));
+    }
+    function toggleMobile() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+    function closeMobile() { document.getElementById('mobile-menu').classList.add('hidden'); }
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 20) {
+        nav.style.boxShadow = '0 2px 20px rgba(53,54,55,0.08)';
+      } else {
+        nav.style.boxShadow = 'none';
+      }
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

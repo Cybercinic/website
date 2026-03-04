@@ -543,14 +543,16 @@
         <h2 class="text-3xl lg:text-4xl font-bold text-night mb-4"><span data-lang="en">Let's talk about what's next</span><span data-lang="nl">Laten we het hebben over wat er komen gaat</span></h2>
         <p class="text-night-light"><span data-lang="en">Every engagement starts with a conversation. No slides. No sales pitch. Just an honest discussion about where you are and what's in the way.</span><span data-lang="nl">Elk traject begint met een gesprek. Geen slides. Geen verkooppraatje. Gewoon een eerlijk gesprek over waar u staat en wat in de weg zit.</span></p>
       </div>
-      <form class="space-y-5 reveal" onsubmit="return false;">
+      <form id="contact-form" class="space-y-5 reveal" action="https://formspree.io/f/mwvngrgd" method="POST">
         <div class="grid md:grid-cols-2 gap-5">
-          <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Name</span><span data-lang="nl">Naam</span></label><input type="text" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
-          <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Company</span><span data-lang="nl">Bedrijf</span></label><input type="text" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
+          <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Name</span><span data-lang="nl">Naam</span></label><input type="text" name="name" required class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
+          <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Company</span><span data-lang="nl">Bedrijf</span></label><input type="text" name="company" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
         </div>
-        <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Email</span><span data-lang="nl">E-mail</span></label><input type="email" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
-        <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">What's on your mind?</span><span data-lang="nl">Waar kunnen we bij helpen?</span></label><textarea rows="5" class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors resize-none"></textarea></div>
-        <button type="submit" class="btn-primary w-full text-center"><span data-lang="en">Send message</span><span data-lang="nl">Verstuur bericht</span></button>
+        <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">Email</span><span data-lang="nl">E-mail</span></label><input type="email" name="email" required class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors"></div>
+        <div><label class="block text-sm font-medium text-night mb-1.5"><span data-lang="en">What's on your mind?</span><span data-lang="nl">Waar kunnen we bij helpen?</span></label><textarea rows="5" name="message" required class="w-full px-4 py-3 bg-polar-light border border-polar-dark rounded-xl text-night focus:outline-none focus:border-fiery focus:ring-1 focus:ring-fiery transition-colors resize-none"></textarea></div>
+        <button type="submit" id="contact-submit" class="btn-primary w-full text-center"><span data-lang="en">Send message</span><span data-lang="nl">Verstuur bericht</span></button>
+        <p id="contact-success" class="hidden text-center text-green-600 font-medium py-3"><span data-lang="en">Thanks! Your message has been sent.</span><span data-lang="nl">Bedankt! Uw bericht is verstuurd.</span></p>
+        <p id="contact-error" class="hidden text-center text-red-500 font-medium py-3"><span data-lang="en">Something went wrong. Please try again or email us directly.</span><span data-lang="nl">Er ging iets mis. Probeer het opnieuw of mail ons direct.</span></p>
       </form>
       <div class="text-center mt-8 reveal">
         <p class="text-night-light text-sm mb-2"><span data-lang="en">Prefer email? </span><span data-lang="nl">Liever direct mailen? </span><a href="mailto:egbert.voerman@upforscale.com" class="text-fiery font-medium hover:underline">egbert.voerman@upforscale.com</a></p>
@@ -599,6 +601,26 @@
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Contact form submission
+    document.getElementById('contact-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('contact-submit');
+      const success = document.getElementById('contact-success');
+      const error = document.getElementById('contact-error');
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      success.classList.add('hidden');
+      error.classList.add('hidden');
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
+        if (res.ok) { form.reset(); success.classList.remove('hidden'); }
+        else { error.classList.remove('hidden'); }
+      } catch { error.classList.remove('hidden'); }
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    });
   </script>
 </body>
 </html>
